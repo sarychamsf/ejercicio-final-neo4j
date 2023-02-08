@@ -1,0 +1,41 @@
+id_persona,nombre_persona,estado_salud,hora_test_resultado,latitud_domicilio,longitud_domicilio
+1,Lara Fernandez,Sano,2020-09-05T00:43:18,41.65659,-4.74017
+2,Fidel Figueroa,Contagiado,2020-09-04T11:18:34,41.64418,-4.71989
+3,Marcelino Rodriguez,Contagiado,2020-09-03T13:39:54,41.6451,-4.72687
+4,Fatima Camino,Sano,2020-09-03T07:58:25,41.64108,-4.71349
+5,Berta Romero,Contagiado,2020-09-02T05:36:03,41.66009,-4.72864
+6,Celia Cuenca,Sano,2020-09-05T12:47:29,41.66049,-4.73338
+7,Alvaro Fernandez,Sano,2020-09-01T07:37:28,41.65885,-4.7499
+8,Diego Alonso,Contagiado,2020-09-04T12:58:16,41.65291,-4.72707
+9,Sofía Vitores,Contagiado,2020-09-03T06:34:39,41.64347,-4.71747
+10,Maria Soto,Sano,2020-09-02T17:48:23,41.64679,-4.73083
+11,Alba Hoyos,Sano,2020-09-04T08:55:30,41.64902,-4.72335
+12,Esther Liebana,Sano,2020-09-01T19:01:06,41.64162,-4.72235
+13,Jose Luis Mozo,Contagiado,2020-09-03T10:50:48,41.64913,-4.73307
+14,Bruno Marin,Sano,2020-09-01T09:03:49,41.63415,-4.73352
+15,Javier Montes,Sano,2020-09-02T22:46:03,41.64757,-4.72102
+16,Daniel Benitez,Sano,2020-09-05T23:38:36,41.64651,-4.72769
+17,Israel Amargo,Contagiado,2020-09-04T21:58:42,41.65177,-4.72439
+18,Elena Gil,Sano,2020-09-03T10:56:43,41.64805,-4.74276
+19,Elisa de la Iglesia,Sano,2020-09-03T12:40:08,41.6395,-4.73003
+20,Ramon Cuadrado,Sano,2020-09-04T00:21:35,40.96916,-5.64982
+21,Sheila Diez,Sano,2020-09-05T08:38:16,40.95695,-5.6445
+22,Martina Angoso,Sano,2020-09-02T22:24:18,40.9574,-5.67141
+23,Lucas Galván,Sano,2020-09-01T12:23:21,40.9715,-5.6546
+24,Marta Valle,Contagiado,2020-09-01T19:07:22,40.97509,-5.6673
+25,Francisco Pardo,Sano,2020-09-03T14:49:47,40.97126,-5.66258
+26,Jaime Calderon,Sano,2020-09-04T18:45:14,40.97359,-5.66083
+27,Soledad Cadenas,Sano,2020-09-05T15:44:37,40.95733,-5.66933
+28,Fernando Carvajal,Sano,2020-09-03T09:33:25,40.98745,-5.65047
+29,Jorge Cuenca,Sano,2020-09-05T23:46:17,40.97718,-5.66329
+30,David Velasco,Contagiado,2020-09-04T21:25:57,40.97097,-5.67842
+31,Enrique Caminero,Sano,2020-09-04T07:51:03,40.96122,-5.66734
+32,Guillermo Carpintero,Sano,2020-09-01T17:04:16,40.96626,-5.6558
+33,Andres Sagrado,Sano,2020-09-01T20:34:15,40.9721,-5.67513
+34,Noelia Valentin,Sano,2020-09-03T11:09:39,40.95746,-5.66529
+35,Irene Montes ,Sano,2020-09-05T00:56:13,40.95584,-5.65159
+36,Saturnino Castaño,Contagiado,2020-09-04T00:14:19,40.96769,-5.67131
+37,Juan Robles,Sano,2020-09-03T19:31:29,40.95849,-5.67747
+38,Tomas Aguado,Sano,2020-09-02T17:50:48,40.97324,-5.66517
+39,Patricia Riol,Sano,2020-09-03T13:50:48,40.96453,-5.64345
+40,Sergio Barbero,Sano,2020-09-05T15:41:30,40.9726,-5.64987
