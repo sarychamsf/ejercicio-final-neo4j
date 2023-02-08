@@ -14,7 +14,7 @@ Con estas bases de datos, se puede tratar de dar respuesta a las siguientes preg
 2. ¿Cómo se puede maximizar el efecto de las aplicaciones de rastreo de contactos?
 3. ¿Cómo se puede utilizar el poder predictivo de un grafo para averiguar quién de las conexiones de una persona tiene mayor riesgo de contraer la enfermedad?
 
-# Dataset 
+## Dataset 
 
 Está dividido en tres CSV:
 
@@ -48,3 +48,12 @@ Hay tres tipos de relaciones entre los nodos:
 
 * (Persona) [VISITA_EMPLAZAMIENTO] (Ubicacion).
 * (Persona) [REALIZA_VISITA] (Visita) [A_ESTABLECIMIENTO] (Ubicacion).
+
+## Preparación de Neo4J
+
+* Abriendo el fichero de configuración, se observa que las bases de datos se guardan en el directorio ```/var/lib/neo4j/data/databases```.
+* Acudir al fichero de configuración de Neo4J y modificar la database activa. Por defecto, Neo4J utiliza la BBDD por defecto “graph.db". Para esto ejecutar: ```sudo nano /etc/neo4j/neo4j.conf```. Posteriormente, se procede a descomentar la línea de database activa y se cambia el nombre de la base de datos activa a “Rastreo_COVID.db”, que será la que se utilice para el caso de negocio.
+
+![image](https://user-images.githubusercontent.com/29135836/217672159-9502744a-e481-4b15-a72c-4d231682ab77.png)
+
+* Se reinicia el servidor de Neo4J para que apliquen los cambios: ```sudo systemctl restart neo4j```
