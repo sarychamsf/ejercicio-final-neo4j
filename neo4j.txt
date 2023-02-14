@@ -1,0 +1,119 @@
+P// ##### CASO 1 #####
+
+MATCH (p:Person)
+RETURN 
+  SUM(CASE WHEN p.status = 'contagiado' THEN 1 ELSE 0 END) AS contagiados,
+  SUM(CASE WHEN p.status = 'sano' THEN 1 ELSE 0 END) AS sanos;
+
+// ##### CASO 2 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WITH pc, vc, u, vs, ps, apoc.coll.max([vc.inicio_visita.epochMillis,vs.inicio_visita.epochMillis]) as maxStart,
+apoc.coll.min([vc.fin_visita.epochMillis,vs.fin_visita.epochMillis]) as minEnd
+WHERE maxStart <= minEnd
+RETURN DISTINCT ps.nombre AS Persona_en_riesgo;
+
+
+// ##### CASO 3 #####
+
+MATCH path = (pc:Persona{nombre:"Marcelino Rodriguez"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE vs.inicio_visita >= vc.inicio_visita
+RETURN path
+ORDER BY vs.duration ASC;
+
+
+MATCH path = (pc:Persona{nombre:"Marcelino Rodriguez"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE vs.inicio_visita >= vc.inicio_visita
+RETURN path
+ORDER BY vs.duration ASC
+LIMIT 6;
+
+// ##### CASO 4 #####
+
+MATCH (pc:Persona{nombre:"Marcelino Rodriguez"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE vs.inicio_visita >= vc.inicio_visita
+RETURN pc.nombre AS Esparcidor_virus, vc.inicio_visita AS Comienzo_esparcimiento_virus, u.nombre AS Establecimiento, ps.nombre AS Persona_en_riesgo, vs.inicio_visita AS Inicio_visita_persona_en_riesgo
+ORDER BY vs.duration ASC;
+
+
+// ##### CASO 5.1 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE ((vc.inicio_visita >= vs.inicio_visita AND vc.inicio_visita <= vs.fin_visita)
+  OR (vs.inicio_visita >= vc.inicio_visita AND vs.inicio_visita <= vc.fin_visita))
+WITH pc, ps, u, vc.inicio_visita AS fecha_comienzo, vc.fin_visita AS fecha_fin
+RETURN pc.nombre AS Persona_Contagiada, 
+       collect({
+           Persona_en_contacto: ps.nombre, 
+           Establecimiento: u.nombre, 
+           Fecha_comienzo_solapamiento: fecha_comienzo, 
+           Fecha_fin_solapamiento: fecha_fin
+       }) AS Contactos;
+
+// ##### CASO 5.2 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE ((vc.inicio_visita >= vs.inicio_visita AND vc.inicio_visita <= vs.fin_visita)
+  OR (vs.inicio_visita >= vc.inicio_visita AND vs.inicio_visita <= vc.fin_visita))
+WITH pc, ps, u, vc.inicio_visita AS fecha_comienzo, vc.fin_visita AS fecha_fin
+RETURN pc.nombre AS Persona_Contagiada, 
+       size(collect({
+           Persona_en_contacto: ps.nombre, 
+           Establecimiento: u.nombre, 
+           Fecha_comienzo_solapamiento: fecha_comienzo, 
+           Fecha_fin_solapamiento: fecha_fin
+       })) AS Numero_de_contactos_sanos
+ORDER BY Numero_de_contactos_sanos DESC;
+
+// ##### CASO 6 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)
+WHERE vc.inicio_visita >= pc.hora_result_test
+RETURN pc.nombre AS Contagiado, vc.inicio_visita AS Fecha_Inicio_Visita, pc.hora_result_test AS Fecha_Confirmacion_Contagio;
+
+// ##### CASO 7 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE ((vc.inicio_visita >= vs.inicio_visita AND vc.inicio_visita <= vs.fin_visita)
+  OR (vs.inicio_visita >= vc.inicio_visita AND vs.inicio_visita <= vc.fin_visita))
+WITH pc, vc, u, vs, ps, vc.inicio_visita AS fecha_comienzo, vc.fin_visita AS fecha_fin, 
+Max(vc.inicio_visita, vs.inicio_visita) AS maxStart,
+Min(vc.fin_visita, vs.fin_visita) AS minEnd
+WITH pc, u, ps, fecha_comienzo, fecha_fin, duration.inSeconds(maxStart, minEnd).seconds AS duracion_sg
+RETURN pc.nombre AS Persona_Contagiada, 
+       collect({
+           Persona_en_contacto: ps.nombre, 
+           Establecimiento: u.nombre, 
+           Fecha_comienzo_solapamiento: fecha_comienzo, 
+           Fecha_fin_solapamiento: fecha_fin,
+	Duracion: floor((duracion_sg / 3600.0) * 10000) / 10000
+       }) AS Contactos;
+
+// ##### CASO 8 #####
+
+MATCH (pc:Persona{estado:"Contagiado"})-[vc:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)<-[vs:VISITA_EMPLAZAMIENTO]-(ps:Persona{estado:"Sano"})
+WHERE ((vc.inicio_visita >= vs.inicio_visita AND vc.inicio_visita <= vs.fin_visita) OR (vs.inicio_visita >= vc.inicio_visita AND vs.inicio_visita <= vc.fin_visita))
+WITH ps, vc.inicio_visita AS fecha_comienzo, vc.fin_visita AS fecha_fin, Max(vc.inicio_visita, vs.inicio_visita) AS maxStart, Min(vc.fin_visita, vs.fin_visita) AS minEnd
+WITH ps, duration.inSeconds(maxStart, minEnd).seconds AS duracion_sg
+WITH ps.nombre AS Persona_sana, SUM(duracion_sg / 3600.0) AS Tiempo_total_exposicion
+RETURN Persona_sana, floor(Tiempo_total_exposicion * 10000) / 10000 AS Tiempo_total_exposicion
+ORDER BY Tiempo_total_exposicion DESC
+LIMIT 5;
+
+// ##### CASO 9 #####
+
+MATCH (p:Persona)-[v:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)-[:PARTE_DE]->(c:Ciudad)
+WITH u, sum(case when p.estado = "Contagiado" then 1 else 0 end) as Num_visitas_Contagiados, count(v) as Num_total_visitas, c.nombre AS Ciudad
+WITH u, Num_visitas_Contagiados, Num_total_visitas, Ciudad, toFloat(Num_visitas_Contagiados) / toFloat(Num_total_visitas) * 100 AS Porcentaje_visitas_de_personas_contagiadas
+WHERE Num_visitas_Contagiados > 0
+RETURN u.nombre as Establecimiento, Num_visitas_Contagiados, Num_total_visitas, floor(Porcentaje_visitas_de_personas_contagiadas * 100) / 100 AS Porcentaje_visitas_de_personas_contagiadas, Ciudad;
+
+// ##### CASO 10 #####
+
+MATCH (p1:Persona{estado:"Contagiado"})-[]->(u:Ubicacion)<-[]-(p2:Persona{estado:"Contagiado"})
+WHERE NOT p1.nombre = p2.nombre
+MATCH (u)-[:PARTE_DE]->(c:Ciudad)
+WHERE c.nombre = "Valladolid" AND id(p1) < id(p2)
+RETURN DISTINCT p1.nombre AS Persona_Contagiada_1, p2.nombre AS Persona_Contagiada_2, c.nombre AS Ciudad, (distance(p1.ubicacion_domicilio, p2.ubicacion_domicilio) / 1000) AS Distancia_domicilios_km
+ORDER BY Distancia_domicilios_km DESC
+LIMIT 3;
