@@ -1,4 +1,4 @@
-P// ##### CASO 1 #####
+// ##### CASO 1 #####
 
 MATCH (p:Person)
 RETURN 
@@ -106,7 +106,8 @@ MATCH (p:Persona)-[v:VISITA_EMPLAZAMIENTO]->(u:Ubicacion)-[:PARTE_DE]->(c:Ciudad
 WITH u, sum(case when p.estado = "Contagiado" then 1 else 0 end) as Num_visitas_Contagiados, count(v) as Num_total_visitas, c.nombre AS Ciudad
 WITH u, Num_visitas_Contagiados, Num_total_visitas, Ciudad, toFloat(Num_visitas_Contagiados) / toFloat(Num_total_visitas) * 100 AS Porcentaje_visitas_de_personas_contagiadas
 WHERE Num_visitas_Contagiados > 0
-RETURN u.nombre as Establecimiento, Num_visitas_Contagiados, Num_total_visitas, floor(Porcentaje_visitas_de_personas_contagiadas * 100) / 100 AS Porcentaje_visitas_de_personas_contagiadas, Ciudad;
+RETURN u.nombre as Establecimiento, Num_visitas_Contagiados, Num_total_visitas, floor(Porcentaje_visitas_de_personas_contagiadas * 100) / 100 AS Porcentaje_visitas_de_personas_contagiadas, Ciudad
+ORDER BY Porcentaje_visitas_de_personas_contagiadas DESC;
 
 // ##### CASO 10 #####
 
